@@ -1,0 +1,71 @@
+import time
+import matplotlib.pyplot as plt
+
+
+# selection sort Function
+
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i+1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+
+
+
+Arr1 = list(range(1, 6))
+Arr2 = list(range(1, 11))
+Arr3 = list(range(1, 51))
+Arr4 = list(range(1, 101))
+
+arrays = [Arr1, Arr2, Arr3, Arr4]
+input_sizes = [len(arr) for arr in arrays]
+
+
+
+# measuring the execution time
+
+def measure_time(sort_function, arr):
+    runs = 5
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start = time.perf_counter()
+        sort_function(copy_arr)
+        end = time.perf_counter()
+        total_time += (end - start)
+    return total_time / runs
+
+
+
+selection_times = []
+
+for arr in arrays:
+    avg_time = measure_time(selection_sort, arr)
+    selection_times.append(avg_time)
+
+    # Also print the sorted array
+
+    copy_arr = arr.copy()
+    selection_sort(copy_arr)
+    print(f"Sorted array of size {len(arr)}: {copy_arr}")
+
+# Display the average times
+
+print("\nAverage Execution Times for Selection Sort:")
+for size, time_taken in zip(input_sizes, selection_times):
+    print(f"Input size {size}: {time_taken:.8f} seconds")
+
+# Plotting
+
+plt.figure(figsize=(8, 5))
+plt.plot(input_sizes, selection_times, marker='o', color='green', label="Selection Sort")
+plt.title("Selection Sort Performance Analysis")
+plt.xlabel("Input Size (N)")
+plt.ylabel("Execution Time (seconds)")
+plt.legend()
+plt.grid(True)
+plt.show()
