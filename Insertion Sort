@@ -1,0 +1,77 @@
+import time
+import matplotlib.pyplot as plt
+
+
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+
+        # Move elements greater than key to one position ahead
+
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+
+
+# given array
+
+Arr1 = list(range(1, 6))
+Arr2 = list(range(1, 11))
+Arr3 = list(range(1, 51))
+Arr4 = list(range(1, 101))
+
+arrays = [Arr1, Arr2, Arr3, Arr4]
+input_sizes = [len(arr) for arr in arrays]
+
+
+
+
+
+def measure_time(sort_function, arr):
+    runs = 5
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start = time.perf_counter()
+        sort_function(copy_arr)
+        end = time.perf_counter()
+        total_time += (end - start)
+    return total_time / runs
+
+
+
+
+
+insertion_times = []
+
+for arr in arrays:
+    avg_time = measure_time(insertion_sort, arr)
+    insertion_times.append(avg_time)
+
+    # Also print the sorted array
+    copy_arr = arr.copy()
+    insertion_sort(copy_arr)
+    print(f"Sorted array of size {len(arr)}: {copy_arr}")
+
+
+
+# Display the average times
+
+print("\nAverage Execution Times for Insertion Sort:")
+for size, time_taken in zip(input_sizes, insertion_times):
+    print(f"Given Input  {size}: {time_taken:.8f} seconds")
+
+# Plotting
+
+plt.figure(figsize=(8, 5))
+plt.plot(input_sizes, insertion_times, marker='o', color='red', label="Insertion Sort")
+plt.title("Insertion Sort Performance Analysis")
+plt.xlabel("Input Size (N)")
+plt.ylabel("Average Execution Time (seconds)")
+plt.legend()
+plt.grid(True)
+plt.show()
