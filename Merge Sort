@@ -1,0 +1,97 @@
+import time
+import matplotlib.pyplot as plt
+
+#Merge Sort
+
+def merge_sort(arr):
+    if len(arr) > 1:
+        # Finding the middle of the array
+        mid = len(arr) // 2
+        left_half = arr[:mid]
+        right_half = arr[mid:]
+
+        merge_sort(left_half)
+        merge_sort(right_half)
+
+        # Merge the sorted halves
+        i = j = k = 0
+
+        # Copy data to temporary arrays L[] and R[]
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] < right_half[j]:
+                arr[k] = left_half[i]
+                i += 1
+            else:
+                arr[k] = right_half[j]
+                j += 1
+            k += 1
+
+        # Check if any element was left
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+
+
+
+
+# given arrays
+
+
+Arr1 = list(range(1, 6))
+Arr2 = list(range(1, 11))
+Arr3 = list(range(1, 51))
+Arr4 = list(range(1, 101))
+
+arrays = [Arr1, Arr2, Arr3, Arr4]
+input_sizes = [len(arr) for arr in arrays]
+
+
+
+def measure_time(sort_function, arr):
+    runs = 5
+    total_time = 0
+    for _ in range(runs):
+        copy_arr = arr.copy()
+        start = time.perf_counter()
+        sort_function(copy_arr)
+        end = time.perf_counter()
+        total_time += (end - start)
+    return total_time / runs
+
+
+merge_times = []
+
+for arr in arrays:
+    avg_time = measure_time(merge_sort, arr)
+    merge_times.append(avg_time)
+
+    # Also print the sorted array
+    copy_arr = arr.copy()
+    merge_sort(copy_arr)
+    print(f"Sorted array of size {len(arr)}: {copy_arr}")
+
+
+# Display the average times
+
+print("\nAverage Execution Times for Merge Sort:")
+for size, time_taken in zip(input_sizes, merge_times):
+    print(f"Given Input {size}: {time_taken:.8f} seconds")
+
+
+
+# Plotting
+
+plt.figure(figsize=(8, 5))
+plt.plot(input_sizes, merge_times, marker='o', color='blue', label="Merge Sort")
+plt.title("Merge Sort Performance Analysis")
+plt.xlabel("Input Size (N)")
+plt.ylabel("Average  Time (seconds)")
+plt.legend()
+plt.grid(True)
+plt.show()
